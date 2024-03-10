@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+          crossorigin="anonymous">
+    <style>
+        div.pagination a {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div>
+	<a th:href="@{/dashboard}">Dashboard</a>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Category</th> <!-- Assuming category is part of the Product entity -->
+        </thead>
+        <tbody>
+        <tr th:each="p : ${product}">
+            <td th:text="${p.pname}"></td>
+            <td th:text="${p.price}"></td>
+            <td th:text="${p.quantity}"></td>
+           
+            <td><a th:href="@{/buy(pid=${p.pid})}" class="btn btn-secondary">Buy</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+ <div th:if="${totalPages > 1}" class="pagination">
+        <a th:each="pageNumber : ${#numbers.sequence(0, totalPages-1 )}"
+           th:href="@{/choose(page=${pageNumber},product=${cat})}" th:text="${pageNumber + 1}"></a>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+</html>

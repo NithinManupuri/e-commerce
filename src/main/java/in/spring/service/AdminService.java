@@ -12,7 +12,10 @@ import in.spring.entity.Category;
 import in.spring.entity.Product;
 import in.spring.repository.AdminRepo;
 import in.spring.repository.CateRepo;
+import in.spring.repository.OrderRepo;
 import in.spring.repository.ProductRepo;
+import in.spring.repository.UserRepo;
+
 
 
 @Service
@@ -27,6 +30,10 @@ public  class AdminService implements AdminInterface{
 	@Autowired
 	private CateRepo crepo;
 	
+	@Autowired
+	private OrderRepo orepo;
+	@Autowired
+	private UserRepo urepo;
 	
 		
 	
@@ -106,6 +113,32 @@ public  class AdminService implements AdminInterface{
 		}
 		
 		return false;
+	}
+
+
+
+
+	@Override
+	public int getOrders() {
+		return orepo.countOrders();
+		}
+
+
+
+
+	@Override
+	public int getUser() {
+		
+		return urepo.totalUser();
+	}
+
+
+
+
+	@Override
+	public int getAmount() {
+		// TODO Auto-generated method stub
+		return orepo.totalAmount();
 	}
 
 

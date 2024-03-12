@@ -22,5 +22,9 @@ public interface AdminInterface {
 	public boolean adminReg(Admin admin);
 	public List<String> getCategory();
 	public boolean saveCate(Category cate);
+	public int getOrders();
+
+	public int getUser();
+	public int getAmount();
 
 }

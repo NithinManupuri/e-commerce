@@ -46,8 +46,19 @@ public class AdminController {
 	       HttpSession session=http.getSession(true);
 	       session.setAttribute("AID", a.getAid());
 	       
-	        return "dash";
+	        return "redirect:/dash";
 	    
+	}
+	@GetMapping("/dash")
+	public String dash(Model model) {
+		  int orders = aservice.getOrders();
+		   int amount= aservice.getAmount();
+	      int users= aservice.getUser();
+		  model.addAttribute("number",orders);
+		  model.addAttribute("user",users);
+		  model.addAttribute("amount",amount);
+		  return "dash";
+		
 	}
 
 

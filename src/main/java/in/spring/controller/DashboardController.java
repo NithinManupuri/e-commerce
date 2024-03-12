@@ -82,10 +82,11 @@ public class DashboardController {
 		
 			
 	       boolean b=dservice.updateProduct(pid, total);
+	       System.out.println(b);
 	
 		if(b) {
-			dservice.getConfirmOrder(uid, total,amount);
-			
+			boolean confirmOrder = dservice.getConfirmOrder(uid, pid,total,amount);
+			System.out.println(confirmOrder);
 		  model.addAttribute("msg","confirmed order");
 		  return "Paymentstatus";
 		}

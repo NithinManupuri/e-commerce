@@ -37,12 +37,15 @@ public class DashboardService implements DashInterface {
 	
 
 	@Override
-	public boolean getConfirmOrder(Integer uid, Integer total,Integer amount) {
+	public boolean getConfirmOrder(Integer uid, Integer pid,Integer total,Integer amount) {
 		  
-		Optional<Product> byId = prepo.findById(uid);
-		Product product=byId.get();
+		Optional<Product> byId = prepo.findById(pid);
+		
+		
 		if(byId.isPresent()){
 		 Orders o=new Orders();
+		 Product product=byId.get();
+		 System.out.println(product.toString());
 			 o.setUid(uid);
 			 o.setPname(product.getPname());
 			 o.setPrice(product.getPrice());

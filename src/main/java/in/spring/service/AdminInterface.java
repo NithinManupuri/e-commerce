@@ -2,8 +2,10 @@ package in.spring.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import in.spring.binding.SearchFilter;
 import in.spring.entity.Admin;
 import in.spring.entity.Category;
 import in.spring.entity.Product;
@@ -25,6 +27,10 @@ public interface AdminInterface {
 	public int getOrders();
 
 	public int getUser();
+	public List<Product> filter(SearchFilter sc);
 	public int getAmount();
+	
+	public Page<Product> getPageAdmin(int page,int pageSize);
+	
 
 }

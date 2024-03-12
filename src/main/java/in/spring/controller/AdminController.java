@@ -4,6 +4,7 @@ package in.spring.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import in.spring.binding.SearchFilter;
 import in.spring.entity.Admin;
 import in.spring.entity.Category;
 import in.spring.entity.Product;
@@ -98,32 +100,47 @@ public String saveProduct(@ModelAttribute("product") Product product, Model mode
 	public String update(@RequestParam Integer pid,Model model) {
 		
 		 model.addAttribute("product",aservice.getProduct(pid));
+		 model.addAttribute("cat", aservice.getCategory());
 		 return "addProduct";
 		
 	}
 	@GetMapping("/allProduct")
-	public String productStore(Model model,HttpServletRequest http) {
+	public String productStore(@RequestParam(defaultValue="0") Integer page,Model model,HttpServletRequest http) {
 		HttpSession session=http.getSession(false);
 		Object obj=session.getAttribute("AID");
 		if(obj==null) {
 			return "redirect:/admin";
 		}
-		 List<Product> productList = aservice.getAllProduct();
-
-		    model.addAttribute("list", productList);
+		
+	      List<String> category = aservice.getCategory();
+	      model.addAttribute("cat", category);
+	         int pageSize=3;
+	         Page<Product> p= aservice.getPageAdmin(page,pageSize);
+	         model.addAttribute("totalPages", p.getTotalPages());
+	         model.addAttribute("currentPage", p);
+	         
+		    model.addAttribute("list", p.getContent());
+		    model.addAttribute("sc", new SearchFilter());
 		    return "productStore";
 	}
 	
 	@GetMapping("/remove")
-	public String delete(@RequestParam Integer pid,Model model,HttpServletRequest http) {
+	public String delete(@RequestParam(defaultValue="0") Integer page,@RequestParam Integer pid,Model model,HttpServletRequest http) {
 		HttpSession session=http.getSession(false);
 		Object obj=session.getAttribute("AID");
 		if(obj==null) {
 			return "redirect:/admin";
 		}
 		       aservice.deleteProduct(pid);
-		
-			model.addAttribute("list",aservice.getAllProduct());
+		       List<String> category = aservice.getCategory();
+			      model.addAttribute("cat", category);
+			         int pageSize=3;
+			         Page<Product> p= aservice.getPageAdmin(page,pageSize);
+			         model.addAttribute("totalPages", p.getTotalPages());
+			         model.addAttribute("currentPage", p);
+			         
+				    model.addAttribute("list", p.getContent());
+				    model.addAttribute("sc", new SearchFilter());
 			return "productStore";
 		
 	}
@@ -176,6 +193,18 @@ public String saveProduct(@ModelAttribute("product") Product product, Model mode
 		}
 		model.addAttribute("category", new Category());
 		return "addCategory";
+		
+	}
+	
+	
+	
+	@PostMapping("/filadmin")
+	public String search(@ModelAttribute("sc") SearchFilter sc,Model model) {
+		List<Product> filter = aservice.filter(sc);
+		System.out.println(filter.toString());
+	
+		model.addAttribute("list", filter);
+		return "adminFilter";
 		
 	}
 	  

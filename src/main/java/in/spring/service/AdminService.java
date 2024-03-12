@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import in.spring.binding.SearchFilter;
 import in.spring.entity.Admin;
 import in.spring.entity.Category;
 import in.spring.entity.Product;
@@ -140,6 +144,40 @@ public  class AdminService implements AdminInterface{
 		// TODO Auto-generated method stub
 		return orepo.totalAmount();
 	}
+
+
+
+
+	@Override
+	public List<Product> filter(SearchFilter sc) {
+		Product p=new Product();
+		  if(sc.getCategory()!=null &&!sc.getCategory().equals("")) {
+			  p.setCategory(sc.getCategory());
+			 
+		  }
+		  Example<Product> list=Example.of(p);
+		  
+			return prepo.findAll(list);
+	}
+
+
+
+
+	@Override
+	public Page<Product> getPageAdmin(int page, int pageSize) {
+		
+		   PageRequest  of=PageRequest.of(page, pageSize);
+		   return   prepo.findAll(of);
+		 
+	}
+
+
+
+
+
+
+
+
 
 
 

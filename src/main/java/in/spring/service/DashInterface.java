@@ -16,7 +16,7 @@ public interface DashInterface {
 
 	public List<Orders> getMyOrders(Integer uid);
     public Page<Product> getProducts(int page,int pageSize);
-    public boolean getConfirmOrder(Integer uid,Integer total,Integer amount);
+    public boolean getConfirmOrder(Integer uid,Integer pid,Integer total,Integer amount);
     public boolean updateProduct(Integer pid,Integer total);
     public boolean getContact(Ticket t,Integer uid);
     public Product getProduct(Integer id);

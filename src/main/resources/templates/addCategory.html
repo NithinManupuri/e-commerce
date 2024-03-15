@@ -82,10 +82,14 @@
     </nav> 
   <div class="yup">
     <span th:text="${msg}"></span>
-    <form action="/saveCate" th:object="${category}" method="post">
+    <form action="/saveCate" th:object="${category}" method="post" enctype="multipart/form-data">
         <div>
             <label>Add Category</label>
             <input type="text" th:field="*{cname}" required>
+        </div>
+        <div>
+            <label>Add Image</label>
+            <input type="file" name="image" required>
         </div>
         <div>
             <input type="submit" value="Add Category">

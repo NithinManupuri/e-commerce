@@ -16,8 +16,8 @@
 </head>
 <body>
 <div>
-	
-	 <nav class="navbar navbar-expand-lg bg-dark">
+
+   <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand text-white" href="#">Food</a>
 
@@ -27,7 +27,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/dashboard">Home</a>
+                        <a class="nav-link text-white" href="#">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/products">Food</a>
@@ -38,6 +38,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/ticket">Ticket</a>
                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="/usercart">cart</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="/ulogout">Logout</a>
                     </li>
@@ -45,39 +48,48 @@
             </div>
         </div>
     </nav> 
-    
-    
-    <table class="table table-bordered table-striped">
-        <thead>
-        <th>Name</th>
-        <th>Price</th>
-        <th>ProductImage</th>
-        <th>Quantity</th>
-        <th>Category</th> 
-        </thead>
-        <tbody>
-        <tr th:each="p : ${product}">
-            <td th:text="${p.pname}"></td>
-                    
-               <td>
-        <img th:src="'data:image/jpeg;base64,' + ${image.get(p.pid)}" style="max-width: 100px; max-height: 100px;"/>
-               </td>
-            <td th:text="${p.price}"></td>
-            <td th:text="${p.quantity}"></td>
-           
-            <td><a th:href="@{/buy(pid=${p.pid})}" class="btn btn-secondary">Buy</a></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
 
- <div th:if="${totalPages > 1}" class="pagination">
-        <a th:each="pageNumber : ${#numbers.sequence(0, totalPages-1 )}"
-           th:href="@{/choose(page=${pageNumber},product=${cat})}" th:text="${pageNumber + 1}"></a>
+    <div th:if="${cart == null || cart.size() == 0}">
+        <!-- Display image when cart is null or empty -->
+        <img src="cartempty.jpeg" alt="Empty Cart Image">
     </div>
+
+    <div th:if="${cart != null && cart.size() > 0}">
+        <!-- Display table when cart is not null and not empty -->
+        <form id="paymentForm" th:action="@{/getPayment}" method="get">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <th>Name</th>
+                <th>ProductImage</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Action</th>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${cart}">
+                    <td th:text="${p.pname}"></td>
+                    <td>
+                        <img th:src="'data:image/jpeg;base64,' + ${image.get(p.cid)}" style="max-width: 100px; max-height: 100px;"/>
+                    </td>
+                    <td th:text="${p.category}"></td>
+                    <td th:text="${p.total}"></td>
+                    <td th:text="${p.amount}"></td>
+                    <td>
+                        <a th:href="@{/removecart?(cid=${p.cid})}" class="btn btn-danger">Remove</a>
+                        <input type="hidden" id="cartList" name="cartList" th:value="${p.cid}" />
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+        </form>
+    </div>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+
 </body>
 </html>

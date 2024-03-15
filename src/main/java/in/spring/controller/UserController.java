@@ -32,15 +32,16 @@ public class UserController {
 	@PostMapping("/save")
 	public String dash(HttpServletRequest request ,@ModelAttribute("login") Login login,Model model) {
 		
-		User u=uservice.handleLogin(login.getEmail(), login.getPassword());
-	     if(u==null) {
-	    	 model.addAttribute("msg", "Invalid Credentials");
-	    	  return "index";
-	     }
+		User user=uservice.handleLogin(login.getEmail(), login.getPassword());
+		
+		 if(user==null) {
+			 
+			 return "redirect:/";
+		 }
 	     
 	     HttpSession session=request.getSession(true);
-	     session.setAttribute("ID", u.getUid());
-	 return "redirect:/dashboard";
+	     session.setAttribute("ID", user.getUid());
+	       return "redirect:/dashboard";
 	}
 	
 	@GetMapping("/recoverpass")
@@ -80,6 +81,17 @@ public class UserController {
 		
 		  return "redirect:/register";
 		
+	}
+	
+	@GetMapping("/ulogout")
+	public String logout(HttpServletRequest request) {
+	    HttpSession session = request.getSession(false);
+
+	    if (session != null) {
+	        session.invalidate();
+	    }
+
+	    return "redirect:/"; 
 	}
 
 }

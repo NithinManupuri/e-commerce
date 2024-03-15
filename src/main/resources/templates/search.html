@@ -18,7 +18,7 @@
             <thead>
                 <th>Name</th>
                 <th>Category</th>
-               
+               <th>ProductImage</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Purchase</th>
@@ -28,7 +28,10 @@
                 <tr th:each="l:${product}">
                     <td th:text="${l.pname}"></td>
                     <td th:text="${l.category}"></td>
-                    
+                            
+               <td>
+        <img th:src="'data:image/jpeg;base64,' + ${image.get(l.pid)}" style="max-width: 100px; max-height: 100px;"/>
+               </td>
                     <td th:text="${l.quantity}"></td>
                     <td th:text="${l.price}"></td>
                     <td><a th:href="@{/buy(pid=${l.pid})}" class="btn btn-secondary">Buy</a></td>

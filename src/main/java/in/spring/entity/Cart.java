@@ -1,8 +1,6 @@
 package in.spring.entity;
 
-import java.time.LocalDate;
-
-import org.hibernate.annotations.CreationTimestamp;
+import java.util.Arrays;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,21 +14,28 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Orders {
+@NoArgsConstructor
+public class Cart {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer oid;
+	private Integer cid;
 	private Integer uid;
+	private Integer pid;
 	private String pname;
-	private Integer quantity;
-	private Integer price;
-	@CreationTimestamp
-	private LocalDate date;
+	private String category;
+	private Integer total;
 	private Integer amount;
 	@Lob
-	@Column(name="image",columnDefinition="LongBlob")
-	private byte[] image;
+	@Column(name="pimage",columnDefinition="LongBlob")
+	private byte[] pimage;
+	@Override
+	public String toString() {
+		return "Cart [cid=" + cid + ", uid=" + uid + ", pid=" + pid + ", pname=" + pname + ", category=" + category
+				+ ", total=" + total + ", amount=" + amount + ", pimage=" + Arrays.toString(pimage) + "]";
+	}
+	
+
+	
 
 }

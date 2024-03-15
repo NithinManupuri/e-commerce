@@ -5,18 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .image-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px; /* Adding margin to the upper margin */
+        }
+        
+        .image-box .box {
+            width: calc(33.33% - 10px);
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc; /* Adding border for box */
+            border-radius: 5px;
+            background-color: #f5f0ff; /* Light violet background color */
+        }
+
+        .image-box .box img {
+            max-width: 100px;
+            max-height: 100px;
+            display: block;
+            margin: 0 auto; /* Centering the image */
+            margin-bottom: 10px; /* Adding margin below the image */
+        }
+
+        .image-box .box a {
+            display: block;
+            text-align: center; /* Centering the text */
+            color: #333; /* Text color */
+        }
+    </style>
 </head>
 <body>
-    <a href="/products">Go Products</a>
-    <a href="/ticket">Ticket</a>
-    <a href="/orders">MyOrders</a>
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">Food</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                   <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/products">Food</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/orders">MyOrders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ticket">Ticket</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="/usercart">cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ulogout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> 
     
-    <div th:each="c : ${cat}">
-        <ul>
-            <li>
-                <a th:href="@{/choose(product=${c})}" th:text="${c}"></a>
-            </li>
-        </ul>
+    <div class="container">
+        <div class="row image-box">
+            <div th:each="c : ${cat}" class="col-4 box">
+                <img th:src="'data:image/jpeg;base64,' + ${image.get(c.cid)}" alt="Category Image" class="img-fluid">
+                <a th:href="@{/choose(product=${c.cname})}" th:text="${c.cname}"></a>
+            </div>
+        </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

@@ -16,7 +16,37 @@
     </style>
 </head>
 <body>
-	<a href="/dashboard">Dashboard</a>
+	 <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">Food</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                   <li class="nav-item">
+                        <a class="nav-link text-white" href="/dashboard">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/products">Food</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/orders">MyOrders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ticket">Ticket</a>
+                    </li>
+                      <li class="nav-item">
+                        <a class="nav-link text-white" href="/usercart">cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ulogout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> 
 	<div class="container">
 	
 	<form  th:action="@{/filter}" method="post" th:object="${sc}">
@@ -39,7 +69,7 @@
             <thead>
                 <th>Name</th>
                 <th>Category</th>
-               
+               <th>ProductImage</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Purchase</th>
@@ -49,6 +79,10 @@
                 <tr th:each="l:${list}">
                     <td th:text="${l.pname}"></td>
                     <td th:text="${l.category}"></td>
+                    
+               <td>
+        <img th:src="'data:image/jpeg;base64,' + ${image.get(l.pid)}" style="max-width: 100px; max-height: 100px;"/>
+               </td>
                     
                     <td th:text="${l.quantity}"></td>
                     <td th:text="${l.price}"></td>

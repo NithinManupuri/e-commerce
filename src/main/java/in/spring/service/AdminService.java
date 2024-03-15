@@ -1,6 +1,7 @@
 package in.spring.service;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import in.spring.binding.SearchFilter;
 import in.spring.entity.Admin;
@@ -19,6 +21,7 @@ import in.spring.repository.CateRepo;
 import in.spring.repository.OrderRepo;
 import in.spring.repository.ProductRepo;
 import in.spring.repository.UserRepo;
+import in.spring.utils.SendMail;
 
 
 
@@ -39,11 +42,22 @@ public  class AdminService implements AdminInterface{
 	@Autowired
 	private UserRepo urepo;
 	
+	@Autowired
+	private SendMail mail;
+	
 		
 	
 
 	@Override
-	public boolean addProduct(Product p) {
+	public boolean addProduct(Product p,MultipartFile image) {
+		if(image!=null && !image.isEmpty()) {
+			try {
+				p.setPimage(image.getBytes());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Product product=prepo.save(p);
 		 if(product.getPid()!=null) {
             return true;
@@ -110,7 +124,11 @@ public  class AdminService implements AdminInterface{
 
 
 	@Override
-	public boolean saveCate(Category cate) {
+	public boolean saveCate(Category cate,MultipartFile image) throws IOException {
+		if(!image.isEmpty()&&image!=null) {
+			cate.setCatalogo(image.getBytes());
+			
+		}
 		Category save = crepo.save(cate);
 		if(save!=null) {
 			return true;
@@ -171,22 +189,14 @@ public  class AdminService implements AdminInterface{
 		 
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
+	@Override
+	public boolean getPass(String name) {
+		      Admin byEmail = arepo.findByEmail(name);
+		      if(byEmail!=null) {
+		    	  mail.getMail(byEmail.getEmail(), byEmail.getName());
+		    	  return true;
+		      }
+		return false;
+	}
 
 }

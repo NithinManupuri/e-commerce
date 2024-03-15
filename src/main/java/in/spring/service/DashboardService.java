@@ -2,6 +2,7 @@ package in.spring.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -11,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 import in.spring.binding.SearchFilter;
 import in.spring.binding.Ticket;
+import in.spring.entity.Cart;
+import in.spring.entity.Category;
 import in.spring.entity.Orders;
 import in.spring.entity.Product;
+import in.spring.repository.CartRepo;
+import in.spring.repository.CateRepo;
 import in.spring.repository.OrderRepo;
 import in.spring.repository.ProductRepo;
 import in.spring.utils.SendMail;
@@ -26,6 +31,11 @@ public class DashboardService implements DashInterface {
 	private ProductRepo prepo;
 	@Autowired
 	private SendMail mail;
+	@Autowired
+	private CateRepo crepo;
+	@Autowired
+	private CartRepo cartrepo;
+	
 	
 	
 
@@ -36,27 +46,7 @@ public class DashboardService implements DashInterface {
 
 	
 
-	@Override
-	public boolean getConfirmOrder(Integer uid, Integer pid,Integer total,Integer amount) {
-		  
-		Optional<Product> byId = prepo.findById(pid);
-		
-		
-		if(byId.isPresent()){
-		 Orders o=new Orders();
-		 Product product=byId.get();
-		 System.out.println(product.toString());
-			 o.setUid(uid);
-			 o.setPname(product.getPname());
-			 o.setPrice(product.getPrice());
-			 o.setQuantity(total);
-			 o.setAmount(amount);
-			 
-			 orepo.save(o);
-		   return true;
-		 }
-		return false;
-	}
+
 
 	@Override
 	public boolean getContact(Ticket t,Integer uid) {
@@ -67,19 +57,67 @@ public class DashboardService implements DashInterface {
 	}
 
 	@Override
-	public boolean updateProduct(Integer pid,Integer total) {
-		  Optional<Product> p= prepo.findById(pid);
-		  if(p.isPresent()) {
-			 Product product=p.get();
-			 int sum=product.getQuantity()-total;
-			 if(sum>=0) {
-				 prepo.update(pid, sum);
-				 
-			
-			 return true;
-			 }
-		  }return false;
+	
+	public List<Integer> updateProduct(List<Integer> idList) {
+	    // Fetch all carts with the provided IDs
+	    List<Cart> cartList = cartrepo.findAllById(idList);
+	    
+	    // Fetch all products corresponding to the carts
+	    List<Integer> productIdList = cartList.stream().map(Cart::getPid).collect(Collectors.toList());
+	    List<Product> productList = prepo.findAllById(productIdList);
+
+	   
+	    boolean allSumsNonNegative = true;
+	    for (int i = 0; i < cartList.size(); i++) {
+	        Cart cart = cartList.get(i);
+	        Product product = productList.get(i);
+	       
+	        if (cart != null && product != null) {
+	           
+	            int remainingQuantity = product.getQuantity() - cart.getTotal();
+	            
+	           
+	            if (remainingQuantity < 0) {
+	               
+	                allSumsNonNegative = false;
+	                break;
+	            }
+	        } else {
+	           
+	           
+	            allSumsNonNegative = false;
+	            break;
+	        }
+	    }
+	    System.out.println("my error "+allSumsNonNegative);
+	    
+	   
+	    if (allSumsNonNegative) {
+	        
+	        for (int i = 0; i < cartList.size(); i++) {
+	            Cart cart = cartList.get(i);
+	            Product product = productList.get(i);
+	            
+	           
+	            int remainingQuantity = product.getQuantity() - cart.getTotal();
+	            if(remainingQuantity!=0) {
+	            	  prepo.update(product.getPid(), remainingQuantity);
+	            	
+	            }else {
+	            	prepo.deleteById(product.getPid());
+	            }
+	           // Update product quantity
+	          
+	          
+	        }
+	        // Return true indicating successful updates
+	        return cartList.stream().map(m->m.getTotal()).collect(Collectors.toList());
+	    } else {
+	       
+	        return null;
+	    }
 	}
+
     public Product getProduct(Integer id) {
     	Optional<Product> p=prepo.findById(id);
     	  if(p.isPresent()) {
@@ -89,8 +127,8 @@ public class DashboardService implements DashInterface {
     }
 
 	@Override
-	public List<String> getCategory() {
-		    List<String> category = prepo.findDistinctCategories();
+	public List<Category> getCategory() {
+		    List<Category> category = crepo.findAll();
 		    return category;
 	}
 
@@ -130,6 +168,117 @@ public class DashboardService implements DashInterface {
 		return byCategory;
 	}
 
+
+
+	@Override
+	public List<String> getC() {
+		
+		return prepo.findDistinctCategories();
+	}
+
+
+
+	@Override
+	public boolean addCart(Cart cart) {
+		Cart save = cartrepo.save(cart);
+		System.out.println(save.getPimage());
+		if(save!=null) {
+			return true;
+		}
+		return false;
+	}
+
+
+
+	@Override
+	public List<Cart> getCartItems(Integer uid) {
+		// TODO Auto-generated method stub
+		List<Cart> byUid = cartrepo.findByUid(uid);
+		return byUid;
+	}
+
+
+
+	@Override
+	public boolean remcart(Integer cid) {
+		// TODO Auto-generated method stub
+		cartrepo.deleteById(cid);
+		return true;
+	}
+
+
+
 	
 
+
+
+	@Override
+	public List<Integer> removeCar(List<Integer> id) {
+		
+		List<Cart> ls=cartrepo.findAllById(id);
+		List<Integer> collect = ls.stream().map(m->m.getAmount()).collect(Collectors.toList());
+		cartrepo.deleteAllById(id);
+
+		
+		
+		
+		return collect;
+	}
+
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public boolean getConfirmOrder(List<Product> id, List<Integer> updateProduct, List<Integer> removeCar,Integer uid) {
+		  
+		
+				
+				for(int i=0;i<id.size(); i++) {
+				 Orders o=new Orders();
+				 Product product=id.get(i);
+					 o.setUid(uid);
+					 o.setPname(product.getPname());
+					 o.setPrice(product.getPrice());
+					 o.setQuantity(updateProduct.get(i));
+					 o.setAmount(removeCar.get(i));
+					 o.setImage(product.getPimage());
+					 
+					 System.out.println("Hello NOthin");
+					Orders od= orepo.save(o);
+					
+					System.out.println(od.toString());
+					 
+				   return true;
+				 }
+				return false;
+		
+	}
+
+
+
+
+
+
+
+
+
+
+	@Override
+	public List<Product> getAllPd(List<Integer> ids) {
+		List<Cart> c=cartrepo.findAllById(ids);
+		List<Integer> pi=c.stream().map(m->m.getPid()).collect(Collectors.toList());
+		
+		return prepo.findAllById(pi);
+	}
+
+
+	
+	
 }

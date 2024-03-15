@@ -3,18 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register Here</title>
+    <title>FoodApp Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa; /* Light gray background color */
+            background-color: #e6e6fa; /* Light violet background color */
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+
+        .left-section {
+            text-align: left;
+            padding-right: 0px;
+        }
+
+        .food-app {
+              font-family: 'Cooper Black', sans-serif; /* Cooper Black font */
+            font-size: 6em; /* Increase font size */
+            color: orange; /* Orange color */
         }
 
         .form-container {
@@ -25,9 +36,7 @@
             text-align: center;
         }
 
-        .form-container h1 {
-            color: orange; /* Orange color */
-            font-size: 2.5em; /* Increase font size */
+        .form-container h2 {
             margin-bottom: 30px;
         }
 
@@ -39,59 +48,50 @@
             width: 100%;
         }
 
-        .form-container form input[type="text"],
-        .form-container form input[type="password"],
         .form-container form input[type="email"],
-        .form-container form input[type="number"],
-        .form-container form button[type="submit"] {
+        .form-container form input[type="password"],
+        .form-container form input[type="submit"] {
             width: 100%;
             padding: 8px;
             margin-bottom: 20px;
             box-sizing: border-box;
         }
 
-        .form-container form button[type="submit"] {
-            background-color: #007bff; /* Blue color */
+        .form-container form input[type="submit"] {
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        .form-container a {
-            color: #007bff; /* Blue color */
-            text-decoration: none;
+        .form-container h3 {
+            text-align: center;
+        }
+
+        .form-container h3 a {
+            color: #007bff;
         }
     </style>
 </head>
 <body>
+ 
+
     <div class="form-container">
-        <h1>Register Here</h1>
-        <font style="color: red;"><p th:text="${msg}"></p></font>
-        <form action="/reg" method="post" th:object="${user}">
+        <h4>Forgot Pass Here</h4>
+        <form action="/recover" th:object="${recover}" method="post">
             <table>
-                <tr>
-                    <td>Name:</td>
-                    <td><input type="text" th:field="*{name}" required></td>
-                </tr>
-                <tr>
-                    <td>Password:</td>
-                    <td><input type="password" th:field="*{password}" required></td>
-                </tr>
                 <tr>
                     <td>Email:</td>
                     <td><input type="email" th:field="*{email}" required></td>
                 </tr>
+               
                 <tr>
-                    <td>Phone No:</td>
-                    <td><input type="number" th:field="*{phNo}" required></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><button type="submit">Submit</button></td>
+                    <td colspan="2"><input type="submit" value="forgotpass"></td>
                 </tr>
             </table>
         </form>
-        <a href="/">Login</a>
+        <h4>Login<a href="/">Login</a></h4>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

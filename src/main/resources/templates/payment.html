@@ -8,12 +8,43 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <form th:object="${product}" th:action="@{/getPayment}" method="get">
+	 <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">Food</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                   <li class="nav-item">
+                        <a class="nav-link text-white" href="/dashboard">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/products">Food</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/orders">MyOrders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ticket">Ticket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/ulogout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h3 th:text="${msg}"></h3> 
+    <form th:object="${product}" th:action="@{/addcart}" method="post" enctype="multipart/form-data">
         <table class="table">
             <tr>
                 <td>Product Name:</td>
                 <td th:text="${product.pname}"></td>
             </tr>
+           
+            
             <tr>
                 <td>Price:</td>
                 <td id="price" th:text="${product.price}"></td>
@@ -26,6 +57,9 @@
                 <td>Total:</td>
                 <td><input type="number" id="total" th:field="*{total}" required></td>
                 <input type="hidden" th:field="*{pid}" value="${product.pid}" />
+                <input type="hidden" th:field="*{pname}" value="${product.pname}" />
+                <input type="hidden" name="category" th:field="*{category}" value="${product.category}" />
+                <input type="hidden" name="pimage" th:field="*{pimage}" value="${product.pimage}" />
                 
                 <input type="hidden" name="amount" id="amount" th:value="${product.total}" />
             </tr>

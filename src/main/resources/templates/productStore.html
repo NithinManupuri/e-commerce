@@ -60,7 +60,7 @@
             <th>Name</th>
             
             <th>Category</th>
-           
+           <th>Image</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>Action</th>
@@ -69,7 +69,12 @@
     <tbody>
         <tr th:each="product : ${list}">
             <td th:text="${product.pname}"></td>
+            
             <td th:text="${product.category}"></td>
+            
+               <td>
+        <img th:src="'data:image/jpeg;base64,' + ${image.get(product.pid)}" style="max-width: 100px; max-height: 100px;"/>
+               </td>
           
 
 

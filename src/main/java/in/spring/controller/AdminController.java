@@ -1,7 +1,11 @@
 package in.spring.controller;
 
 
+import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import in.spring.binding.ForgotPass;
 import in.spring.binding.SearchFilter;
 import in.spring.entity.Admin;
 import in.spring.entity.Category;
@@ -78,9 +84,9 @@ public class AdminController {
 	}
 
 @PostMapping("/saveProduct")
-public String saveProduct(@ModelAttribute("product") Product product, Model model) {
+public String saveProduct(@RequestParam("image") MultipartFile image,@ModelAttribute("product") Product product, Model model) {
     
-        boolean flag = aservice.addProduct(product);
+        boolean flag = aservice.addProduct(product,image);
 
         if (flag) {
             model.addAttribute("msg", "Product added successfully");
@@ -111,13 +117,19 @@ public String saveProduct(@ModelAttribute("product") Product product, Model mode
 		if(obj==null) {
 			return "redirect:/admin";
 		}
-		
+		Map<Integer,String> map=new HashMap<>();
 	      List<String> category = aservice.getCategory();
 	      model.addAttribute("cat", category);
 	         int pageSize=3;
 	         Page<Product> p= aservice.getPageAdmin(page,pageSize);
 	         model.addAttribute("totalPages", p.getTotalPages());
 	         model.addAttribute("currentPage", p);
+	         List<Product> product=p.getContent();
+	         for(Product pd: product) {
+	        	  String base64Image = Base64.getEncoder().encodeToString(pd.getPimage());
+	              map.put(pd.getPid(), base64Image);
+	         }
+	         model.addAttribute("image", map);
 	         
 		    model.addAttribute("list", p.getContent());
 		    model.addAttribute("sc", new SearchFilter());
@@ -132,12 +144,18 @@ public String saveProduct(@ModelAttribute("product") Product product, Model mode
 			return "redirect:/admin";
 		}
 		       aservice.deleteProduct(pid);
+		   	Map<Integer,String> map=new HashMap<>();
 		       List<String> category = aservice.getCategory();
 			      model.addAttribute("cat", category);
 			         int pageSize=3;
 			         Page<Product> p= aservice.getPageAdmin(page,pageSize);
 			         model.addAttribute("totalPages", p.getTotalPages());
 			         model.addAttribute("currentPage", p);
+			         for(Product pd: p) {
+			        	  String base64Image = Base64.getEncoder().encodeToString(pd.getPimage());
+			              map.put(pd.getPid(), base64Image);
+			         }
+			         model.addAttribute("image", map);
 			         
 				    model.addAttribute("list", p.getContent());
 				    model.addAttribute("sc", new SearchFilter());
@@ -182,9 +200,9 @@ public String saveProduct(@ModelAttribute("product") Product product, Model mode
 	}
 	
 	@PostMapping("/saveCate")
-	public String saveCategory(@ModelAttribute("cate") Category cate,Model model ) {
+	public String saveCategory(@RequestParam("image") MultipartFile image,@ModelAttribute("cate") Category cate,Model model ) throws IOException {
 		
-		boolean saveCate = aservice.saveCate(cate);
+		boolean saveCate = aservice.saveCate(cate, image);
 		if(saveCate) {
 			model.addAttribute("msg","Added");
 		}else {
@@ -199,19 +217,42 @@ public String saveProduct(@ModelAttribute("product") Product product, Model mode
 	
 	
 	@PostMapping("/filadmin")
-	public String search(@ModelAttribute("sc") SearchFilter sc,Model model) {
+	public String search(@ModelAttribute("sc") SearchFilter sc,Model model,HttpServletRequest http) {
+		HttpSession session=http.getSession(false);
+		Object obj=session.getAttribute("AID");
+		if(obj==null) {
+			return "redirect:/index";
+		}
+		System.out.println("\n\n hello");
 		List<Product> filter = aservice.filter(sc);
+		Map<Integer,String> map=new HashMap<>();
 		System.out.println(filter.toString());
+		 for(Product pd: filter) {
+       	  String base64Image = Base64.getEncoder().encodeToString(pd.getPimage());
+             map.put(pd.getPid(), base64Image);
+        }
+        model.addAttribute("image", map);
 	
 		model.addAttribute("list", filter);
 		return "adminFilter";
 		
 	}
+	@GetMapping("/aforgot")
+	public String adminForgot(Model model){
+		model.addAttribute("name",new ForgotPass());
+		return "AdminPass"; 
+		}
 	  
+	@PostMapping("/name")
+	public String forgotPass(@RequestParam("name") String name,Model model) {
+		     boolean b=aservice.getPass(name);
+		     if(b) {
+		    	 model.addAttribute("msg", "PassSent");
+		     }else {
+		    	 model.addAttribute("msg","Invalid Credentials");
+		     }
+		     return "AdminPass";
+	}
 
-	
-	
-	
-	
 	
 }

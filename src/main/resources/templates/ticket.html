@@ -5,38 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Light gray background color */
+            padding: 20px;
+        }
+
+        a.dashboard-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue color */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-container table {
+            width: 50%;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container textarea,
+        .form-container input[type="submit"] {
+            width: calc(100% - 20px); /* Adjust input width */
+            padding: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container textarea {
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #007bff; /* Blue color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-	<a th:href="@{/dashboard}">Dashboard</a>
+    <a href="/dashboard" class="dashboard-link">Dashboard</a>
 
-    <span th:text="${msg}"></span>
-    <form action="/hc" method="post" th:object="${ticket}">
-        <table>
-            <tr>
-                <td>Name:</td>
-                <td><input type="text" th:field="*{name}"></td>
-            </tr>
-            <tr>
-                <td>Email:</td>
-                <td><input type="email" th:field="*{email}"></td>
-            </tr>
-             <tr>
-				 <td>Data:</td>
-				<td>
-					<label for="freeform">Tell us about you ticket:</label><br>
-                        
-       
-                 <textarea id="freeform" name="freeform" rows="4" cols="50">
-                   Enter text here...
-                 </textarea>
-				</td>
-			</tr>
-            <tr>
-                <td><input type="submit"></td>
-            </tr>
-        </table>
-    </form>
-    
+    <div class="form-container">
+        <span th:text="${msg}"></span>
+        <form action="/hc" method="post" th:object="${ticket}">
+            <table>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" th:field="*{name}"></td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td><input type="email" th:field="*{email}"></td>
+                </tr>
+                <tr>
+                    <td>Data:</td>
+                    <td>
+                        <label for="freeform">Tell us about your ticket:</label><br>
+                        <textarea id="freeform" name="freeform" rows="4" cols="50"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Submit"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

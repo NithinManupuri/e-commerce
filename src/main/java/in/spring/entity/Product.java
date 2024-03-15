@@ -32,6 +32,6 @@ public class Product {
 	 
 	@Lob
 	@Column(name="image",columnDefinition="LongBlob")
-	private byte[] imageFile;
+	private byte[] pimage;
 	  
 }

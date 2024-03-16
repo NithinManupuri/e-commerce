@@ -35,7 +35,7 @@ public class UserController {
 		User user=uservice.handleLogin(login.getEmail(), login.getPassword());
 		
 		 if(user==null) {
-			 
+			 model.addAttribute("msg", "InvalidCredentials");
 			 return "redirect:/";
 		 }
 	     

@@ -1,15 +1,15 @@
 package in.spring.controller;
 
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-
+import in.spring.binding.Greeting;
+import in.spring.binding.HelloMessage;
 import in.spring.binding.ProductInfo;
 import in.spring.binding.SearchFilter;
+import in.spring.binding.SearchOrder;
 import in.spring.binding.Ticket;
 import in.spring.entity.Cart;
 import in.spring.entity.Category;
@@ -135,27 +134,29 @@ public class DashboardController {
 	    if (uid == null ) {
 	        return "redirect:/";
 	    }
-	    System.out.println(cartList);
+	   
 	    if(cartList.isEmpty()) {
 	    	System.out.println("95");
 	    	return "redirect:/addcart";
 	    }
 	   
-
 	    List<Product> plist=dservice.getAllPd(cartList);
+	    System.out.println("Nithin: "+plist.size());
 
-	    List<Integer> updateProduct = dservice.updateProduct(cartList);
-	    System.out.println(updateProduct.toString());
+       List<Integer> updateProduct = dservice.updateProduct(cartList);
+	   
+       System.out.println("Nithin: "+updateProduct.size());
 	   
 	    if (updateProduct != null) {
 	    	 System.out.println(updateProduct.toString());
 	        List<Integer> removeCar = dservice.removeCar(cartList);
-	         System.out.println(removeCar.toString());
+	         System.out.println("Nithin: "+removeCar.size());
 	        dservice.getConfirmOrder(plist, updateProduct, removeCar,uid);
 	        model.addAttribute("msg", "confirmed order");
 	        return "Paymentstatus";
 	    }
 	    model.addAttribute("msg", "Failed to order");
+	   
 	    return "Paymentstatus";
 	}
 
@@ -236,27 +237,34 @@ public class DashboardController {
 	}
 	
 	@GetMapping("/orders")
-	public String orders(Model model,HttpServletRequest http) {
+	public String orders(@RequestParam(defaultValue="0") Integer page,Model model,HttpServletRequest http) {
 		HttpSession session=http.getSession(false);
 		  Object o=session.getAttribute("ID");
 		  Integer uid=(Integer)o;
 		  if(o==null) {
-			  return "redirect:/";
+			  return "redirect: /";
 		  }
+		int pageSize=2;
 		
-		    List<Orders> myOrders = dservice.getMyOrders(uid);
+		     Page<Orders> myOrders = dservice.getMyOrders(uid,page,pageSize);
 		    Map<Integer,String> map=new HashMap<>();
 			
-			for(Orders product:myOrders) {
+			for(Orders product:myOrders.getContent()) {
 				 String base64Image = Base64.getEncoder().encodeToString(product.getImage());
 	             map.put(product.getOid(), base64Image);
 			}
+			 List<String> c = dservice.getC();
+			model.addAttribute("cat", c);
 			model.addAttribute("image", map);
-		    model.addAttribute("orders", myOrders);
+		    model.addAttribute("orders",myOrders.getContent() );
+		    model.addAttribute("totalPages", myOrders.getTotalPages());
+		    model.addAttribute("currentPage", page);
+		    model.addAttribute("sc", new SearchOrder());
 		    return "orders";
 		
 		
 	}
+	
 	@GetMapping("/dashboard")
 	
 	public String dashing(Model model,HttpServletRequest http) {
@@ -330,7 +338,72 @@ public class DashboardController {
 		
 		
 	}
+	
+	
+
+	@PostMapping("/os")
+	public String orderSearch(@ModelAttribute("sc") SearchOrder  sc,Model model,HttpServletRequest http) {
+		HttpSession session=http.getSession(false);
+		  Object o=session.getAttribute("ID");
+		 
+		  if(o==null) {
+			  return "redirect:/";
+		  }
+		  System.out.print(sc);
+		List<Orders> search = dservice.serachOrder(sc);
+		System.out.println(search.toString());
+Map<Integer,String> map=new HashMap<>();
+		
+		for(Orders product: search) {
+			 String base64Image = Base64.getEncoder().encodeToString(product.getImage());
+             map.put(product.getOid(), base64Image);
+		}
+		model.addAttribute("image", map);
+              
+		model.addAttribute("od", search);
+		return "orderPage";
+		
+	}
+	
+	@GetMapping("/connect")
+	public String connect(Model model) {
+
+		model.addAttribute("msg","conncet");
+		return "userConnect";
+	}
+	
+	
+	@PostMapping("/connect")
+	public String  userConn(@RequestParam String data,Model model) {
+		  boolean uchat= dservice.getChat();
+	    if(uchat) {
+	    	dservice.delChat();
+	    	return "redirect:/chat";
+	    }
+	    
+	    dservice.requestAdmin(data);
+	    model.addAttribute("msg","connecting.......");
+	    return "userconnect";
+	    
+		
+	}
+	
+	@GetMapping("/chat")
+	public String chat() {
+		return "chat";
+		
+	}
+	
+	@MessageMapping("/hello")
+	@SendTo("/topic/greetings")
+	public Greeting handleMessage(HelloMessage rm) {
+		
+		return new Greeting(rm.getName());
+		
+		
+	}
 }
+
 	
 	
 	

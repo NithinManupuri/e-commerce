@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import in.spring.binding.Connection;
 import in.spring.binding.SearchFilter;
+import in.spring.binding.SearchOrder;
 import in.spring.binding.Ticket;
 import in.spring.entity.Cart;
 import in.spring.entity.Category;
@@ -16,7 +18,7 @@ import in.spring.entity.Product;
 @Service
 public interface DashInterface {
 
-	public List<Orders> getMyOrders(Integer uid);
+	public Page<Orders>  getMyOrders(Integer uid,Integer page,Integer pageSize);
     public Page<Product> getProducts(int page,int pageSize);
   
     public List<Integer> updateProduct(List<Integer> id);
@@ -32,6 +34,12 @@ public interface DashInterface {
 	public boolean getConfirmOrder(List<Product> id, List<Integer> updateProduct, List<Integer> removeCar,Integer uid);
 	public List<Integer> removeCar(List<Integer> id);
 	public List<Product> getAllPd(List<Integer> ids);
+	public List<Orders> serachOrder(SearchOrder sc);
+	
+	public boolean getChat();
+	public boolean requestAdmin(String data);
+	public void delChat();
+
     
 }
  

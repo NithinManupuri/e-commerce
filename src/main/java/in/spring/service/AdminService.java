@@ -16,10 +16,13 @@ import in.spring.binding.SearchFilter;
 import in.spring.entity.Admin;
 import in.spring.entity.Category;
 import in.spring.entity.Product;
+import in.spring.entity.UserChat;
+import in.spring.repository.AdminChatRepo;
 import in.spring.repository.AdminRepo;
 import in.spring.repository.CateRepo;
 import in.spring.repository.OrderRepo;
 import in.spring.repository.ProductRepo;
+import in.spring.repository.UchatRepo;
 import in.spring.repository.UserRepo;
 import in.spring.utils.SendMail;
 
@@ -44,6 +47,11 @@ public  class AdminService implements AdminInterface{
 	
 	@Autowired
 	private SendMail mail;
+	
+	@Autowired
+	private AdminChatRepo adminChat;
+	@Autowired
+	private UchatRepo userChat;
 	
 		
 	
@@ -197,6 +205,31 @@ public  class AdminService implements AdminInterface{
 		    	  return true;
 		      }
 		return false;
+	}
+
+
+
+
+	@Override
+	public boolean recieveData() {
+		// TODO Auto-generated method stub
+		   long count = adminChat.count();
+		   if(count!=0) {
+			   return true;
+		   }
+		return false;
+	}
+
+
+
+
+	@Override
+	public void acceptAndRemove() {
+		 UserChat u=new UserChat();
+		  u.setMessage("connected");
+		  userChat.save(u);
+		  adminChat.deleteAll();
+		
 	}
 
 }

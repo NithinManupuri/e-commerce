@@ -1,6 +1,6 @@
 package in.spring.entity;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,10 +27,11 @@ public class Orders {
 	private Integer quantity;
 	private Integer price;
 	@CreationTimestamp
-	private LocalDate date;
+	private Date date;
 	private Integer amount;
 	@Lob
 	@Column(name="image",columnDefinition="LongBlob")
 	private byte[] image;
+	private String category;
 
 }

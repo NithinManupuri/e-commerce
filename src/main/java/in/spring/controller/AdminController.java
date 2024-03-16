@@ -255,4 +255,29 @@ public String saveProduct(@RequestParam("image") MultipartFile image,@ModelAttri
 	}
 
 	
+	@GetMapping("/adminChat")
+	public String adminChat(Model model) {
+               boolean recieveData = aservice.recieveData();
+               int val=0;
+               if(recieveData) {
+            	   val=1;
+               }
+               model.addAttribute("msg", val);
+
+               return "adminChat";
+               
+	}
+	
+	@PostMapping("/openChat")
+	public String chatUser() {
+		
+		System.out.println("admin chat ");
+		 aservice.acceptAndRemove();
+		     
+		return "redirect:/chat";
+		
+	}
+	
+	
+	
 }

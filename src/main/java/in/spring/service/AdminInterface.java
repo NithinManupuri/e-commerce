@@ -36,5 +36,8 @@ public interface AdminInterface {
 	public Page<Product> getPageAdmin(int page,int pageSize);
 	public boolean getPass(String name);
 	
+	public boolean recieveData();
+	public void acceptAndRemove();
+	
 
 }

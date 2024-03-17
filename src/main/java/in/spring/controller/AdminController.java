@@ -57,8 +57,8 @@ public class AdminController {
 	        return "redirect:/dash";
 	    
 	}
-	@GetMapping("/dash")
-	public String dash(Model model) {
+	@PostMapping("/dash")
+	public String dash(Model model,HttpServletRequest http) {
 		  int orders = aservice.getOrders();
 		   int amount= aservice.getAmount();
 	      int users= aservice.getUser();

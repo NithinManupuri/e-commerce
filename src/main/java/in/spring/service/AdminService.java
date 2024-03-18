@@ -149,7 +149,7 @@ public  class AdminService implements AdminInterface{
 
 
 	@Override
-	public int getOrders() {
+	public Long getOrders() {
 		return orepo.countOrders();
 		}
 
@@ -157,7 +157,7 @@ public  class AdminService implements AdminInterface{
 
 
 	@Override
-	public int getUser() {
+	public 	Long  getUser() {
 		
 		return urepo.totalUser();
 	}

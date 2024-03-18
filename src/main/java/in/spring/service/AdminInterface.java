@@ -27,11 +27,11 @@ public interface AdminInterface {
 	public List<String> getCategory();
 	
 	public boolean saveCate(Category cate,MultipartFile image) throws IOException;
-	public int getOrders();
+	public Long getOrders();
 
 	public int getUser();
 	public List<Product> filter(SearchFilter sc);
-	public int getAmount();
+	public Long getAmount();
 	
 	public Page<Product> getPageAdmin(int page,int pageSize);
 	public boolean getPass(String name);

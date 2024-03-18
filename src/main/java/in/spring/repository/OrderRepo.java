@@ -14,10 +14,10 @@ public interface OrderRepo extends JpaRepository<Orders,Integer>{
 	public Page<Orders> findByUid(Integer uid, PageRequest pageRequest);
 	
 	@Query("SELECT COUNT(*) FROM Orders")
-	public int countOrders();
+	public Long countOrders();
 	
 	@Query("Select SUM(amount) FROM Orders")
-	public int totalAmount();
+	public Long totalAmount();
 	
 	
 

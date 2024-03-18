@@ -29,7 +29,7 @@ public interface AdminInterface {
 	public boolean saveCate(Category cate,MultipartFile image) throws IOException;
 	public Long getOrders();
 
-	public int getUser();
+	public Long getUser();
 	public List<Product> filter(SearchFilter sc);
 	public Long getAmount();
 	

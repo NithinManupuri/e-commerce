@@ -157,7 +157,7 @@ public  class AdminService implements AdminInterface{
 
 
 	@Override
-	public 	Long  getUser() {
+	public 	int  getUser() {
 		
 		return urepo.totalUser();
 	}
@@ -166,7 +166,7 @@ public  class AdminService implements AdminInterface{
 
 
 	@Override
-	public int getAmount() {
+	public Long getAmount() {
 		// TODO Auto-generated method stub
 		return orepo.totalAmount();
 	}
@@ -213,7 +213,7 @@ public  class AdminService implements AdminInterface{
 	@Override
 	public boolean recieveData() {
 		// TODO Auto-generated method stub
-		   long count = adminChat.count();
+		   int  count = adminChat.count();
 		   if(count!=0) {
 			   return true;
 		   }

@@ -157,7 +157,7 @@ public  class AdminService implements AdminInterface{
 
 
 	@Override
-	public 	int  getUser() {
+	public 	Long  getUser() {
 		
 		return urepo.totalUser();
 	}

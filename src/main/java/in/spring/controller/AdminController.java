@@ -66,7 +66,7 @@ public class AdminController {
 		}
 		  Long orders = aservice.getOrders();
 		   Long amount= aservice.getAmount();
-	      int users= aservice.getUser();
+	           Long users= aservice.getUser();
 		  model.addAttribute("number",orders);
 		  model.addAttribute("user",users);
 		  model.addAttribute("amount",amount);

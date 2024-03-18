@@ -64,8 +64,8 @@ public class AdminController {
 		if(obj==null) {
 			return "redirect:/admin";
 		}
-		  int orders = aservice.getOrders();
-		   int amount= aservice.getAmount();
+		  Long orders = aservice.getOrders();
+		   Long amount= aservice.getAmount();
 	      int users= aservice.getUser();
 		  model.addAttribute("number",orders);
 		  model.addAttribute("user",users);

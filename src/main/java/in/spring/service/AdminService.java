@@ -213,7 +213,7 @@ public  class AdminService implements AdminInterface{
 	@Override
 	public boolean recieveData() {
 		// TODO Auto-generated method stub
-		   int  count = adminChat.count();
+		   int count = adminChat.countRows();
 		   if(count!=0) {
 			   return true;
 		   }

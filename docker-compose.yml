@@ -16,7 +16,7 @@ services:
     networks:
       - springboot-db-net
     environment:
-      - MYSQL_ROOT_PASSWORD=Nithin
+      - MYSQL_ROOT_PASSWORD=Sainithin@2002
       - MYSQL_DATABASE=app
     volumes:
       - /data/mysql

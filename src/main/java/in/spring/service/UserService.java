@@ -23,6 +23,9 @@ public class UserService implements UserInferface{
 	@Override
 	public boolean recoverPass(String email) {
 	       User user=urepo.findByEmail(email);
+		if(user==null){
+			return false;
+		}
 	    return mail.getMail(user.getEmail(),user.getPassword());
 		
 	}

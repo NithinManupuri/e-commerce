@@ -8,4 +8,7 @@ import in.spring.entity.AdminChat;
 @Repository
 public interface AdminChatRepo  extends JpaRepository<AdminChat,Integer>{
 
+   @Query("SELECT COUNT(a) FROM AdminChat a")
+    public int countRows();
+
 }

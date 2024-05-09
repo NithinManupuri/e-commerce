@@ -201,7 +201,7 @@ public  class AdminService implements AdminInterface{
 	public boolean getPass(String name) {
 		      Admin byEmail = arepo.findByEmail(name);
 		      if(byEmail!=null) {
-		    	  mail.getMail(byEmail.getEmail(), byEmail.getName());
+		    	  mail.getMail(byEmail.getEmail(), byEmail.password());
 		    	  return true;
 		      }
 		return false;

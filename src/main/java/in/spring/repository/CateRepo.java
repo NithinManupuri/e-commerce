@@ -9,7 +9,7 @@ import in.spring.entity.Category;
 
 public interface CateRepo extends JpaRepository<Category,Integer> {
 	
-	@Query(value = "SELECT cname FROM Category", nativeQuery = true)
+	@Query(value = "SELECT cname FROM category", nativeQuery = true)
 	public List<String> getAllCategory();
 
 }
